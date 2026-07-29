@@ -159,12 +159,16 @@ async function setMyProfile(userId, updates) {
 
 }
 
-async function getPublicProfile(userId, { contributionsPage = 1, setsPage = 1, limit = 20 } = {}){
-    const contributionsWhere = { authorId: userId, status: 'VERIFIED' };
+export async function getPublicProfile(
+    userId,
+    { contributionsPage = 1, setsPage = 1, limit = 20 } = {},
+    prismaClient = prisma
+){
+    const contributionsWhere = { authorId: userId };
     const setsWhere = { ownerId: userId, isPublic: true };
 
     const [profile, contributions, contributionsTotal, createdSets, setsTotal] = await Promise.all([
-        prisma.user.findUnique({
+        prismaClient.user.findUnique({
             where: {
                 id: userId
             },
@@ -180,7 +184,7 @@ async function getPublicProfile(userId, { contributionsPage = 1, setsPage = 1, l
                 }
             }
         }),
-        prisma.translation.findMany({
+        prismaClient.translation.findMany({
             where: contributionsWhere,
             include: {
                 language: { select: LANGUAGE_SUMMARY_SELECT }
@@ -191,8 +195,8 @@ async function getPublicProfile(userId, { contributionsPage = 1, setsPage = 1, l
                 createdAt: 'desc'
             }
         }),
-        prisma.translation.count({ where: contributionsWhere }),
-        prisma.vocabSet.findMany({
+        prismaClient.translation.count({ where: contributionsWhere }),
+        prismaClient.vocabSet.findMany({
             where: setsWhere,
             include: {
                 language: { select: LANGUAGE_SUMMARY_SELECT },
@@ -208,7 +212,7 @@ async function getPublicProfile(userId, { contributionsPage = 1, setsPage = 1, l
                 createdAt: 'desc'
             }
         }),
-        prisma.vocabSet.count({ where: setsWhere })
+        prismaClient.vocabSet.count({ where: setsWhere })
     ]);
 
     if (!profile) return null;
