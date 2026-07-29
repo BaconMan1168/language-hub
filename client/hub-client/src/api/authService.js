@@ -2,6 +2,9 @@ import api from './axiosConfig.js';
 
 async function register(userData){
     const response = await api.post('/register', userData);
+    if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token);
+    }
     return response.data;
 }
 

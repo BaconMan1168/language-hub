@@ -83,11 +83,7 @@ export default function RegisterPage(){
                 username: formData.username,
                 password: formData.password,
             });
-            // Preserve redirect and intent so login page can redirect after auth
-            const loginHref = isContributeIntent
-                ? `/login?redirect=${encodeURIComponent(redirectTo)}&intent=contribute`
-                : '/login';
-            navigate(loginHref);
+            navigate(redirectTo);
         }
         catch (err) {
             setErrors({

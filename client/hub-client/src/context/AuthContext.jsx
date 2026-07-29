@@ -46,7 +46,9 @@ export function AuthProvider({ children }) {
     };
 
     const register = async (userData) => {
-        return authService.register(userData);
+        const response = await authService.register(userData);
+        setUser(response.user);
+        return response;
     };
 
     const logout = () => {
