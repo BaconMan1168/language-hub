@@ -72,6 +72,38 @@
   color: var(--text-secondary);
 }
 
+.communityStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  gap: 16px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+.communityStat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 24px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-rgba);
+  border-radius: 16px;
+}
+
+.communityStatValue {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 600;
+  color: #C0763A;
+}
+
+.communityStatLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
 .searchSection {
   margin-bottom: 48px;
   max-width: 600px;
@@ -318,6 +350,7 @@
 @media (prefers-reduced-motion: reduce) {
   .usersPage,
   .header,
+  .communityStats,
   .searchSection,
   .loadingState,
   .empty,
@@ -378,6 +411,20 @@
 
   .subtitle {
     font-size: 14px;
+  }
+
+  .communityStats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .communityStat {
+    padding: 16px;
+  }
+
+  .communityStatValue {
+    font-size: 26px;
+    line-height: 30px;
   }
 
   .avatar {

@@ -14,6 +14,7 @@ export default function UsersPage() {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [pagination, setPagination] = useState(null);
+    const [communityStats, setCommunityStats] = useState(null);
     const [mounted, setMounted] = useState(false);
     const gridRef = useRef(null);
 
@@ -38,6 +39,7 @@ export default function UsersPage() {
                 const result = await profileService.searchUsers(currentPage, USERS_PER_PAGE, debouncedSearch);
                 setUsers(result.users);
                 setPagination(result.pagination);
+                setCommunityStats(result.communityStats);
 
                 if (currentPage > 1) {
                     window.scrollTo({ top: 200, behavior: 'smooth' });
@@ -90,6 +92,23 @@ export default function UsersPage() {
                         Explore profiles of contributors helping to preserve endangered languages
                     </p>
                 </header>
+
+                {communityStats && (
+                    <section className={styles.communityStats} aria-label="Community totals">
+                        <div className={styles.communityStat}>
+                            <span className={styles.communityStatValue}>
+                                {communityStats.users.toLocaleString()}
+                            </span>
+                            <span className={styles.communityStatLabel}>Registered users</span>
+                        </div>
+                        <div className={styles.communityStat}>
+                            <span className={styles.communityStatValue}>
+                                {communityStats.contributors.toLocaleString()}
+                            </span>
+                            <span className={styles.communityStatLabel}>Contributors</span>
+                        </div>
+                    </section>
+                )}
 
                 <div className={styles.searchSection}>
                     <Input
