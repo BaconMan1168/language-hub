@@ -7,7 +7,7 @@ const LANGUAGE_SUMMARY_SELECT = {
     slug: true
 };
 
-async function searchUsers(username, page = 1, limit = 20){
+export async function searchUsers(username, page = 1, limit = 20, prismaClient = prisma){
     const skip = (page - 1) * limit;
     
     const where = {
@@ -17,8 +17,8 @@ async function searchUsers(username, page = 1, limit = 20){
         }
     };
 
-    const [users, total] = await Promise.all([
-        prisma.user.findMany({
+    const [users, total, totalUsers, totalContributors] = await Promise.all([
+        prismaClient.user.findMany({
             where,
             select: {
                 id: true,
@@ -38,11 +38,23 @@ async function searchUsers(username, page = 1, limit = 20){
                 createdAt: 'desc'
             }
         }),
-        prisma.user.count({ where })
+        prismaClient.user.count({ where }),
+        prismaClient.user.count(),
+        prismaClient.user.count({
+            where: {
+                contributions: {
+                    some: {}
+                }
+            }
+        })
     ]);
 
     return {
         users,
+        communityStats: {
+            users: totalUsers,
+            contributors: totalContributors
+        },
         pagination: {
             page,
             limit,
