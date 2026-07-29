@@ -431,6 +431,11 @@
   overflow-x: auto;
 }
 
+.tablePagination {
+  padding: 14px;
+  border-top: 1px solid var(--border-color);
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;

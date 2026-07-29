@@ -46,6 +46,7 @@ export default function Pagination({
 
       <div className={styles.pagination}>
         <button
+          type="button"
           className={`${styles.pageButton} ${styles.navButton}`}
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -67,6 +68,7 @@ export default function Pagination({
 
           return (
             <button
+              type="button"
               key={page}
               className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
               onClick={() => onPageChange(page)}
@@ -79,6 +81,7 @@ export default function Pagination({
         })}
 
         <button
+          type="button"
           className={`${styles.pageButton} ${styles.navButton}`}
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}

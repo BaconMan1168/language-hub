@@ -6,7 +6,11 @@ import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import MissingWordsBottomSheet from '../../components/MissingWordsSidebar/MissingWordsBottomSheet';
 import MissingWordsSidebar from '../../components/MissingWordsSidebar/MissingWordsSidebar';
+import Pagination from '../../components/Pagination/Pagination';
+import { clampPage, getPageItems, getTotalPages } from '../../utils/pagination';
 import styles from './BulkUploadPage.module.css';
+
+const ROWS_PER_PAGE = 10;
 
 const TEMPLATE_HEADERS = [
     'wordText',
@@ -371,6 +375,7 @@ export default function BulkUploadPage() {
     const [sourcePreview, setSourcePreview] = useState(null);
     const [columnMapping, setColumnMapping] = useState(inferColumnMapping([]));
     const [draftRows, setDraftRows] = useState(() => createBlankDraftRows());
+    const [draftPage, setDraftPage] = useState(1);
     const [rightsConfirmed, setRightsConfirmed] = useState(false);
     const [loading, setLoading] = useState(false);
     const [previewLoading, setPreviewLoading] = useState(false);
@@ -379,6 +384,7 @@ export default function BulkUploadPage() {
     const [languagesLoading, setLanguagesLoading] = useState(true);
     const [error, setError] = useState('');
     const [result, setResult] = useState(null);
+    const [resultPage, setResultPage] = useState(1);
     const [guideModalOpen, setGuideModalOpen] = useState(false);
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
@@ -390,6 +396,13 @@ export default function BulkUploadPage() {
         () => draftRows.filter(row => getDraftRowIssue(row)).length,
         [draftRows]
     );
+    const draftTotalPages = getTotalPages(draftRows.length, ROWS_PER_PAGE);
+    const currentDraftPage = clampPage(draftPage, draftRows.length, ROWS_PER_PAGE);
+    const visibleDraftRows = getPageItems(draftRows, currentDraftPage, ROWS_PER_PAGE);
+    const resultRows = result?.rows || [];
+    const resultTotalPages = getTotalPages(resultRows.length, ROWS_PER_PAGE);
+    const currentResultPage = clampPage(resultPage, resultRows.length, ROWS_PER_PAGE);
+    const visibleResultRows = getPageItems(resultRows, currentResultPage, ROWS_PER_PAGE);
     const selectedGuide = GUIDE_BY_INPUT_MODE[inputMode];
     const selectedSlug = languages.find(language => language.id === languageId)?.slug ?? null;
 
@@ -432,6 +445,7 @@ export default function BulkUploadPage() {
         setSourcePreview(null);
         setColumnMapping(inferColumnMapping([]));
         setDraftRows([]);
+        setDraftPage(1);
     };
 
     const startReview = (preview) => {
@@ -444,6 +458,7 @@ export default function BulkUploadPage() {
         setSourcePreview(preview);
         setColumnMapping(mapping);
         setDraftRows(sourceRowsToDraftRows(preview.rows, mapping));
+        setDraftPage(1);
         setError('');
         setResult(null);
     };
@@ -478,6 +493,7 @@ export default function BulkUploadPage() {
             setSourcePreview(null);
             setColumnMapping(inferColumnMapping([]));
             setDraftRows(createBlankDraftRows());
+            setDraftPage(1);
         } else {
             resetReview();
         }
@@ -509,6 +525,7 @@ export default function BulkUploadPage() {
         setSourcePreview(null);
         setColumnMapping(inferColumnMapping([]));
         setDraftRows(createBlankDraftRows());
+        setDraftPage(1);
     };
 
     const handleColumnMappingChange = (field, sourceIndex) => {
@@ -531,6 +548,7 @@ export default function BulkUploadPage() {
     };
 
     const handleAddDraftRow = () => {
+        setDraftPage(getTotalPages(draftRows.length + 1, ROWS_PER_PAGE));
         setDraftRows(prev => [
             ...prev,
             {
@@ -548,23 +566,28 @@ export default function BulkUploadPage() {
         setSourcePreview(null);
         setColumnMapping(inferColumnMapping([]));
         setMobileSheetOpen(false);
-        setDraftRows(prev => {
-            const rows = prev.length > 0 ? prev : createBlankDraftRows();
-            const emptyDefinitionIndex = rows.findIndex(row => !row.data.englishDefinition.trim());
+        const rows = draftRows.length > 0 ? draftRows : createBlankDraftRows();
+        const emptyDefinitionIndex = rows.findIndex(row => !row.data.englishDefinition.trim());
+        const destinationIndex = emptyDefinitionIndex >= 0 ? emptyDefinitionIndex : rows.length;
 
-            if (emptyDefinitionIndex >= 0) {
-                return rows.map((row, index) => (
-                    index === emptyDefinitionIndex
+        setDraftPage(Math.floor(destinationIndex / ROWS_PER_PAGE) + 1);
+        setDraftRows(prev => {
+            const currentRows = prev.length > 0 ? prev : createBlankDraftRows();
+            const currentEmptyDefinitionIndex = currentRows.findIndex(row => !row.data.englishDefinition.trim());
+
+            if (currentEmptyDefinitionIndex >= 0) {
+                return currentRows.map((row, index) => (
+                    index === currentEmptyDefinitionIndex
                         ? { ...row, data: { ...row.data, englishDefinition: word.word } }
                         : row
                 ));
             }
 
             return [
-                ...rows,
+                ...currentRows,
                 {
-                    id: `manual-${Date.now()}-${rows.length + 1}`,
-                    rowNumber: rows.length + 1,
+                    id: `manual-${Date.now()}-${currentRows.length + 1}`,
+                    rowNumber: currentRows.length + 1,
                     data: { ...emptyRowData(), englishDefinition: word.word }
                 }
             ];
@@ -572,9 +595,12 @@ export default function BulkUploadPage() {
     };
 
     const handleDeleteDraftRow = (rowId) => {
-        setDraftRows(prev => prev
+        const nextRows = draftRows
             .filter(row => row.id !== rowId)
-            .map((row, index) => ({ ...row, rowNumber: index + 1 })));
+            .map((row, index) => ({ ...row, rowNumber: index + 1 }));
+
+        setDraftRows(nextRows);
+        setDraftPage(prev => clampPage(prev, nextRows.length, ROWS_PER_PAGE));
     };
 
     const handleSubmit = async (e) => {
@@ -613,6 +639,7 @@ export default function BulkUploadPage() {
                 rightsConfirmed
             });
             setResult(batch);
+            setResultPage(1);
             setFile(null);
             resetReview();
             setRightsConfirmed(false);
@@ -811,7 +838,7 @@ export default function BulkUploadPage() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {draftRows.map(row => {
+                                                    {visibleDraftRows.map(row => {
                                                         const issue = getDraftRowIssue(row);
                                                         return (
                                                             <tr key={row.id}>
@@ -852,6 +879,19 @@ export default function BulkUploadPage() {
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        {draftTotalPages > 1 && (
+                                            <div className={styles.tablePagination}>
+                                                <Pagination
+                                                    currentPage={currentDraftPage}
+                                                    totalPages={draftTotalPages}
+                                                    onPageChange={setDraftPage}
+                                                    totalItems={draftRows.length}
+                                                    itemsPerPage={ROWS_PER_PAGE}
+                                                    compact
+                                                />
+                                            </div>
+                                        )}
 
                                         <div className={styles.reviewActions}>
                                             <Button type="button" variant="secondary" onClick={handleAddDraftRow}>
@@ -932,7 +972,7 @@ export default function BulkUploadPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {result.rows?.slice(0, 25).map(row => (
+                                            {visibleResultRows.map(row => (
                                                 <tr key={row.id}>
                                                     <td>{row.rowNumber}</td>
                                                     <td>{row.wordText || '-'}</td>
@@ -949,6 +989,18 @@ export default function BulkUploadPage() {
                                         </tbody>
                                     </table>
                                 </div>
+                                {resultTotalPages > 1 && (
+                                    <div className={styles.tablePagination}>
+                                        <Pagination
+                                            currentPage={currentResultPage}
+                                            totalPages={resultTotalPages}
+                                            onPageChange={setResultPage}
+                                            totalItems={resultRows.length}
+                                            itemsPerPage={ROWS_PER_PAGE}
+                                            compact
+                                        />
+                                    </div>
+                                )}
                             </Card>
                         )}
                     </section>
