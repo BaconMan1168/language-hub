@@ -150,10 +150,6 @@ export default function LanguageDetailPage() {
 
                 setTranslations(result.translations || []);
                 setPagination(result.pagination);
-
-                if (currentPage > 1) {
-                    window.scrollTo({ top: 200, behavior: 'smooth' });
-                }
             } catch (err) {
                 if (cancelled) return;
                 setTranslationsError('Failed to load translations. Please try again.');
