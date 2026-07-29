@@ -24,6 +24,13 @@ export default function LanguageCard({ language }){
                     )}
                 </div>
 
+                <div className={styles.totalWords}>
+                    <span className={styles.totalWordCount}>
+                        {(language.totalWordCount ?? 0).toLocaleString()}
+                    </span>
+                    <span>total words</span>
+                </div>
+
                 <div className={styles.progressWrapper}>
                     <div className={styles.progressHeader}>
                         <span>

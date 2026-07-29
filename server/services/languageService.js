@@ -26,33 +26,55 @@ async function attachSignedUrls(translations) {
     );
 }
 
-async function getCompletionCountsByLanguageId(languageIds) {
-    if (languageIds.length === 0) return {};
+export async function getLanguageTranslationCounts(languageIds, prismaClient = prisma) {
+    if (languageIds.length === 0) {
+        return { completionCounts: {}, totalWordCounts: {} };
+    }
 
-    const coveredCommonWords = await prisma.translation.findMany({
-        where: {
-            languageId: { in: languageIds },
-            commonWordId: { not: null }
-        },
-        select: {
-            languageId: true,
-            commonWordId: true
-        },
-        distinct: ['languageId', 'commonWordId']
-    });
+    const [coveredCommonWords, totalWords] = await Promise.all([
+        prismaClient.translation.findMany({
+            where: {
+                languageId: { in: languageIds },
+                commonWordId: { not: null }
+            },
+            select: {
+                languageId: true,
+                commonWordId: true
+            },
+            distinct: ['languageId', 'commonWordId']
+        }),
+        prismaClient.translation.groupBy({
+            by: ['languageId'],
+            where: {
+                languageId: { in: languageIds }
+            },
+            _count: {
+                _all: true
+            }
+        })
+    ]);
 
-    return coveredCommonWords.reduce((counts, row) => {
+    const completionCounts = coveredCommonWords.reduce((counts, row) => {
         counts[row.languageId] = (counts[row.languageId] || 0) + 1;
         return counts;
     }, {});
+    const totalWordCounts = totalWords.reduce((counts, row) => {
+        counts[row.languageId] = row._count._all;
+        return counts;
+    }, {});
+
+    return { completionCounts, totalWordCounts };
 }
 
 async function withLiveCompletionCounts(languages) {
-    const countsByLanguageId = await getCompletionCountsByLanguageId(languages.map(language => language.id));
+    const { completionCounts, totalWordCounts } = await getLanguageTranslationCounts(
+        languages.map(language => language.id)
+    );
 
     return languages.map(language => ({
         ...language,
-        completionCount: countsByLanguageId[language.id] || 0
+        completionCount: completionCounts[language.id] || 0,
+        totalWordCount: totalWordCounts[language.id] || 0
     }));
 }
 
