@@ -8,6 +8,7 @@ import MissingWordsBottomSheet from '../../components/MissingWordsSidebar/Missin
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
+import { POS_OPTIONS } from '../../data/partsOfSpeech';
 import styles from './ContributePage.module.css';
 
 const STEPS = [
@@ -15,20 +16,6 @@ const STEPS = [
     { id: 2, label: 'Meaning', requiredFields: ['englishDefinition'] },
     { id: 3, label: 'Context & Audio', requiredFields: [] },
     { id: 4, label: 'Review', requiredFields: [] },
-];
-
-const POS_OPTIONS = [
-    { value: 'noun',         label: 'Noun',         definition: 'Names a person, place, thing, or idea.' },
-    { value: 'verb',         label: 'Verb',         definition: 'Expresses an action, occurrence, or state.' },
-    { value: 'adjective',    label: 'Adjective',    definition: 'Describes or modifies a noun or pronoun.' },
-    { value: 'adverb',       label: 'Adverb',       definition: 'Modifies a verb, adjective, or other adverb.' },
-    { value: 'pronoun',      label: 'Pronoun',      definition: 'Stands in place of a noun (e.g., siya, ito).' },
-    { value: 'preposition',  label: 'Preposition',  definition: 'Shows relationship between a noun and other words.' },
-    { value: 'conjunction',  label: 'Conjunction',  definition: 'Connects words, phrases, or clauses.' },
-    { value: 'interjection', label: 'Interjection', definition: 'Expresses a sudden emotion or reaction.' },
-    { value: 'particle',     label: 'Particle',     definition: 'A function word with grammatical role (common in Philippine languages).' },
-    { value: 'phrase',       label: 'Phrase',       definition: 'A group of words functioning as a single unit.' },
-    { value: 'other',        label: 'Other',        definition: 'Does not fit the categories above.' },
 ];
 
 const MAX_RECORDING_SECONDS = 10;

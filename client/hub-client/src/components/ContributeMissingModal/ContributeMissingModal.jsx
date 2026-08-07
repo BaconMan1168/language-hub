@@ -5,6 +5,7 @@ import styles from './ContributeMissingModal.module.css';
 import Input from '../Input/Input';
 import { contributionService } from '../../api/contributionService';
 import { translationUpdateRequestService } from '../../api/translationUpdateRequestService';
+import { POS_OPTIONS } from '../../data/partsOfSpeech';
 
 export default function ContributeMissingModal({ translation, fieldsToContribute, onClose }){
     const [audioFile, setAudioFile] = useState(null);
@@ -352,17 +353,11 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                               className={styles.select}
                           >
                               <option value="">Select part of speech</option>
-                              <option value="noun">Noun</option>
-                              <option value="verb">Verb</option>
-                              <option value="adjective">Adjective</option>
-                              <option value="adverb">Adverb</option>
-                              <option value="pronoun">Pronoun</option>
-                              <option value="preposition">Preposition</option>
-                              <option value="conjunction">Conjunction</option>
-                              <option value="interjection">Interjection</option>
-                              <option value="particle">Particle</option>
-                              <option value="phrase">Phrase</option>
-                              <option value="other">Other</option>
+                              {POS_OPTIONS.map(option => (
+                                  <option key={option.value} value={option.value} title={option.definition}>
+                                      {option.label}
+                                  </option>
+                              ))}
                           </select>
                       </div>
                     )}
