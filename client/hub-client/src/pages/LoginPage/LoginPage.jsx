@@ -37,7 +37,7 @@ export default function LoginPage(){
         const newErrors = {}
 
         if (!formData.email){
-            newErrors.email = 'Email is required'
+            newErrors.email = 'Email or username is required'
         }
         if (!formData.password){
             newErrors.password = 'Password is required'
@@ -106,14 +106,15 @@ export default function LoginPage(){
 
                     <form noValidate onSubmit={handleSubmit} className={styles.form}>
                         <Input
-                        label="Email"
-                        type="email"
+                        label="Email or username"
+                        type="text"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        placeholder="your@email.com"
+                        placeholder="Enter your email or username"
                         error={errors.email}
+                        autoComplete="username"
                         />
 
                         <Input
@@ -125,6 +126,7 @@ export default function LoginPage(){
                         required
                         placeholder="Enter your password"
                         error={errors.password}
+                        autoComplete="current-password"
                         />
 
                         <div className={styles.forgotPasswordLink}>

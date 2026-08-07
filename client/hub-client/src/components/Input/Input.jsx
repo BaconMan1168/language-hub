@@ -10,6 +10,7 @@ export default function Input({ label,
     disabled = false,
     id,
     name,
+    autoComplete,
     className = '' 
 }){
     const inputId = id || name
@@ -31,6 +32,7 @@ export default function Input({ label,
                 placeholder={placeholder}
                 required={required}
                 disabled={disabled}
+                autoComplete={autoComplete}
                 className={`${styles.input} ${error ? styles.error : ''}`}
             />
             {error && <span className={styles.errorText}>{error}</span>}
