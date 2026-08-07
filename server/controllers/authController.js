@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken'
 import auth from '../middleware/auth.js'
 import validationErrorCheck from '../middleware/expressValidate.js';
+import { authenticateUser } from '../services/authService.js';
 import emailService from '../services/emailService.js';
 import "dotenv/config";
 import { body, matchedData } from 'express-validator'
@@ -52,8 +53,10 @@ const validateRegister = [
 
 const validateLogin = [
     body('email').exists()
-        .isEmail().withMessage('Email must be a valid address')
-        .normalizeEmail(),
+        .isString()
+        .trim()
+        .notEmpty().withMessage('Email or username must not be empty')
+        .isLength({ max: 255 }).withMessage('Email or username must not exceed 255 characters'),
     body('password').exists()
         .notEmpty().withMessage('Password must not be empty')
         .trim()
@@ -107,19 +110,12 @@ const loginUser = [
     validateLogin,
     validationErrorCheck,
     async (req, res, next) => {
-        const { email, password } = matchedData(req)
+        const { email: identifier, password } = matchedData(req)
 
         try {
-            const user = await prisma.user.findUnique({
-                where: {
-                    email
-                }
-            })
+            const user = await authenticateUser(identifier, password)
 
             if (!user) return res.status(400).json({ error: "Incorrect username or password" });
-
-            const valid = await bcrypt.compare(password, user.password)
-            if (!valid) return res.status(400).json({ error: "Incorrect username or password" })
 
             const token = signAuthToken(user)
 
