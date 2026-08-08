@@ -3,3 +3,6 @@ node_modules
 .env
 
 /generated/prisma
+
+# One-off contributor seeding endeavor (scripts + generated output)
+/scripts/seed-contributors
