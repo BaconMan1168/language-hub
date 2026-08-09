@@ -277,7 +277,7 @@
 .shimmerLine {
   height: 20px;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--border) 25%, var(--border-rgba) 50%, var(--border) 75%);
+  background: var(--border);
   background-size: 200% 100%;
   animation: shimmer 1.4s ease infinite;
 }

@@ -62,7 +62,7 @@
   flex-shrink: 0;
 }
 
-/* Override the global animated gradient applied to all headings */
+/* Keep modal headings on the standard text color */
 .title {
   font-size: 18px;
   font-weight: 700;

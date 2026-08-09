@@ -31,8 +31,7 @@
   inset: 0;
   opacity: 0.02;
   background-image:
-    repeating-linear-gradient(45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(-45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px);
+    none;
   pointer-events: none;
 }
 
@@ -43,7 +42,7 @@
   left: -8%;
   width: 460px;
   height: 460px;
-  background: radial-gradient(circle, rgba(31, 41, 55, 0.06) 0%, transparent 70%);
+  background: rgba(31, 41, 55, 0.06);
   border-radius: 50%;
 }
 
@@ -78,7 +77,7 @@
   font-size: 44px;
   line-height: 52px;
   font-weight: 600;
-  background: var(--heading-gradient);
+  background: var(--heading-color);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

@@ -37,7 +37,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(192, 118, 58, 0.03) 0%, transparent 70%);
+  background: rgba(192, 118, 58, 0.03);
   pointer-events: none;
 }
 
@@ -111,7 +111,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(192, 118, 58, 0.05) 0%, transparent 70%);
+  background: rgba(192, 118, 58, 0.05);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -131,7 +131,7 @@
   font-size: 48px;
   line-height: 56px;
   font-weight: 600;
-  background: linear-gradient(135deg, #C0763A 0%, #1F2937 100%);
+  background: #C0763A;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

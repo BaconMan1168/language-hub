@@ -126,7 +126,7 @@
 .fileInput::file-selector-button {
   padding: 7px 14px;
   margin-right: 12px;
-  background: linear-gradient(135deg, #C0763A 0%, #D68A4F 100%);
+  background: #C0763A;
   color: white;
   border: none;
   border-radius: 8px;
@@ -137,7 +137,7 @@
 }
 
 .fileInput::file-selector-button:hover {
-  background: linear-gradient(135deg, #A96432 0%, #C0763A 100%);
+  background: #A96432;
   transform: translateY(-1px);
 }
 

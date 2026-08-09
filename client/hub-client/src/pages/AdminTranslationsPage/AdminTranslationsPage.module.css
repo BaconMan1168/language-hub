@@ -36,8 +36,7 @@
   bottom: 0;
   opacity: 0.02;
   background-image: 
-    repeating-linear-gradient(45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(-45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px);
+    none;
   pointer-events: none;
 }
 
@@ -48,7 +47,7 @@
   right: -6%;
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle, rgba(192, 118, 58, 0.06) 0%, transparent 70%);
+  background: rgba(192, 118, 58, 0.06);
   border-radius: 50%;
   animation: float 20s ease-in-out infinite;
 }
@@ -92,7 +91,7 @@
   font-size: clamp(30px, 4vw, 48px);
   line-height: 1;
   font-weight: 600;
-  background: var(--heading-gradient);
+  background: var(--heading-color);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -149,7 +148,7 @@
   align-items: flex-end;
   justify-content: space-between;
   flex-wrap: wrap;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--bg-surface) 92%, transparent), color-mix(in srgb, var(--bg-elevated) 78%, transparent));
+  background: var(--bg-surface);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-rgba);
   border-radius: 20px;
@@ -325,7 +324,7 @@
   gap: 10px;
   align-items: stretch;
   padding: 10px;
-  background: linear-gradient(135deg, rgba(192, 118, 58, 0.06), rgba(255, 255, 255, 0.02));
+  background: rgba(192, 118, 58, 0.06);
   border: 1px solid var(--border-rgba);
   border-radius: 22px;
   position: relative;
@@ -401,7 +400,7 @@
 
 .reviewButtonPrimary {
   color: #FFFFFF;
-  background: linear-gradient(135deg, #B86A31, #D78A47);
+  background: #B86A31;
   box-shadow: 0 10px 22px rgba(192, 118, 58, 0.24);
 }
 

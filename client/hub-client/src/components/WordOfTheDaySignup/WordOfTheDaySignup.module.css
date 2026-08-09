@@ -4,13 +4,13 @@
   flex-wrap: wrap;
   gap: 10px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #1e1408, #1a1208);
+  background: #1e1408;
   border-top: 1px solid rgba(192, 118, 58, 0.2);
 }
 
 /* Success state */
 .successStrip {
-  background: linear-gradient(135deg, #0e2010, #0a1a0d);
+  background: #0e2010;
   border-top: 1px solid rgba(74, 222, 128, 0.15);
   flex-wrap: nowrap;
 }

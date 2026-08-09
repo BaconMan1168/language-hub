@@ -203,7 +203,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(192, 118, 58, 0.04) 0%, transparent 100%);
+  background: rgba(192, 118, 58, 0.04);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -391,8 +391,7 @@
   bottom: 0;
   opacity: 0.02;
   background-image: 
-    repeating-linear-gradient(45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(-45deg, #C0763A 0px, #C0763A 1px, transparent 1px, transparent 20px);
+    none;
   pointer-events: none;
 }
 
@@ -403,7 +402,7 @@
   right: -10%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(192, 118, 58, 0.06) 0%, transparent 70%);
+  background: rgba(192, 118, 58, 0.06);
   border-radius: 50%;
   animation: float 22s ease-in-out infinite;
 }
@@ -435,7 +434,7 @@
   font-size: 40px;
   line-height: 48px;
   font-weight: 600;
-  background: var(--heading-gradient);
+  background: var(--heading-color);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -466,24 +465,13 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #C0763A, #D68A4F, #C0763A);
-  background-size: 200% auto;
-  animation: gradientSlide 3s linear infinite;
-}
-
-@keyframes gradientSlide {
-  0% {
-    background-position: 0% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
+  background: #C0763A;
 }
 
 .success {
   margin-bottom: 20px;
   padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+  background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.3);
   border-radius: 12px;
   color: #059669;
@@ -526,7 +514,7 @@
 
 .error {
   padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+  background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 12px;
   color: #DC2626;
@@ -614,7 +602,7 @@
 .fileInput::file-selector-button {
   padding: 8px 16px;
   margin-right: 12px;
-  background: linear-gradient(135deg, #C0763A 0%, #D68A4F 100%);
+  background: #C0763A;
   color: white;
   border: none;
   border-radius: 8px;
@@ -624,7 +612,7 @@
 }
 
 .fileInput::file-selector-button:hover {
-  background: linear-gradient(135deg, #A96432 0%, #C0763A 100%);
+  background: #A96432;
   transform: translateY(-1px);
 }
 
@@ -693,7 +681,7 @@
 /* Record Section */
 .recordSection {
   padding: 20px;
-  background: linear-gradient(135deg, rgba(243, 244, 246, 0.8) 0%, rgba(249, 250, 251, 0.9) 100%);
+  background: rgba(243, 244, 246, 0.8);
   border-radius: 12px;
   border: 1px solid rgba(229, 231, 235, 0.6);
 }
@@ -718,7 +706,7 @@
 .waveformContainer {
   width: 100%;
   height: 100px;
-  background: linear-gradient(180deg, rgba(220, 38, 38, 0.03) 0%, rgba(220, 38, 38, 0.08) 100%);
+  background: rgba(220, 38, 38, 0.03);
   border-radius: 10px;
   border: 2px solid rgba(220, 38, 38, 0.2);
   padding: 8px;
@@ -799,7 +787,7 @@
 
 .recordingProgressBar {
   height: 100%;
-  background: linear-gradient(90deg, #DC2626 0%, #EF4444 50%, #F87171 100%);
+  background: #DC2626;
   border-radius: 3px;
   transition: width 0.3s ease;
   box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
@@ -821,12 +809,12 @@
 }
 
 .recordButton {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+  background: #DC2626;
   color: white;
 }
 
 .recordButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
+  background: #B91C1C;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
 }
@@ -838,12 +826,12 @@
 }
 
 .stopButton {
-  background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+  background: #6B7280;
   color: white;
 }
 
 .stopButton:hover {
-  background: linear-gradient(135deg, #4B5563 0%, #6B7280 100%);
+  background: #4B5563;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
 }
@@ -974,7 +962,7 @@
 
 .uploadProgressFill {
   height: 100%;
-  background: linear-gradient(90deg, #C0763A 0%, #D68A4F 100%);
+  background: #C0763A;
   border-radius: 2px;
   transition: width 0.3s ease;
   box-shadow: 0 0 8px rgba(192, 118, 58, 0.5);
@@ -1008,4 +996,3 @@
   gap: 12px;
   margin-top: 12px;
 }
-
