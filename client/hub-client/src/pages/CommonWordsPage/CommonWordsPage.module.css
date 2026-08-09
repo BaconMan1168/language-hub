@@ -35,17 +35,6 @@
   pointer-events: none;
 }
 
-.commonWordsPage::before {
-  content: '';
-  position: absolute;
-  top: -12%;
-  right: -6%;
-  width: 420px;
-  height: 420px;
-  background: rgba(192, 118, 58, 0.08);
-  border-radius: 50%;
-}
-
 .container {
   max-width: 980px;
   margin: 0 auto;

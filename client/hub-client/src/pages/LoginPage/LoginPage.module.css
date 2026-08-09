@@ -9,46 +9,6 @@
   overflow: hidden;
 }
 
-/* Animated background particles */
-.loginPage::before {
-  content: '';
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  background: rgba(192, 118, 58, 0.08);
-  border-radius: 50%;
-  top: -20%;
-  left: -10%;
-  animation: particleFloat 25s ease-in-out infinite;
-}
-
-.loginPage::after {
-  content: '';
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: rgba(31, 41, 55, 0.04);
-  border-radius: 50%;
-  bottom: -20%;
-  right: -10%;
-  animation: particleFloat 30s ease-in-out infinite reverse;
-}
-
-@keyframes particleFloat {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.4;
-  }
-  33% {
-    transform: translate(40px, -40px) scale(1.1);
-    opacity: 0.6;
-  }
-  66% {
-    transform: translate(-30px, 30px) scale(0.95);
-    opacity: 0.5;
-  }
-}
-
 .container {
   width: 100%;
   max-width: 440px;

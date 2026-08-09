@@ -6,27 +6,6 @@
   overflow: hidden;
 }
 
-.setDetailPage::before {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: -5%;
-  width: 400px;
-  height: 400px;
-  background: rgba(192, 118, 58, 0.06);
-  border-radius: 50%;
-  animation: float 18s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(30px, -20px);
-  }
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;

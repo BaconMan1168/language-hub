@@ -239,23 +239,6 @@
   position: relative;
 }
 
-.questionCard::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: rgba(192, 118, 58, 0.04);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.questionCard:hover::before {
-  opacity: 1;
-}
-
 .questionHeader {
   display: flex;
   justify-content: space-between;

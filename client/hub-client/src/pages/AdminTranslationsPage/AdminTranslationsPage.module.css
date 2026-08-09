@@ -40,27 +40,6 @@
   pointer-events: none;
 }
 
-.adminTranslationsPage::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  right: -6%;
-  width: 420px;
-  height: 420px;
-  background: rgba(192, 118, 58, 0.06);
-  border-radius: 50%;
-  animation: float 20s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(-18px, 26px);
-  }
-}
-
 .container {
   max-width: 1240px;
   margin: 0 auto;
@@ -444,10 +423,6 @@
   .radioLabel span {
     animation: none;
     transition: none;
-  }
-
-  .adminTranslationsPage::before {
-    animation: none;
   }
 
   .loadingSpinner {
