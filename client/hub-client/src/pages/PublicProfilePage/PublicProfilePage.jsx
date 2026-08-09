@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { profileService } from '../../api/profileService';
 import Card from '../../components/Card/Card';
@@ -19,7 +19,6 @@ export default function PublicProfilePage() {
   const [expandedId, setExpandedId] = useState(null);
   const [contributionsPage, setContributionsPage] = useState(1);
   const [setsPage, setSetsPage] = useState(1);
-  const gridRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -80,32 +79,6 @@ export default function PublicProfilePage() {
 
     fetchProfile();
   }, [userId, contributionsPage, setsPage]);
-
-  // Scroll animation observer for grid items
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion || !gridRef.current) return;
-
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(styles.visible);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-    items.forEach(item => observer.observe(item));
-
-    return () => observer.disconnect();
-  }, [profile, activeTab]);
 
   if (loading) {
     return (
@@ -239,12 +212,10 @@ export default function PublicProfilePage() {
               </div>
             ) : (
               <>
-                <div className={styles.contributionsGrid} ref={gridRef}>
-                  {profile.contributions?.map((contribution, index) => (
+                <div className={styles.contributionsGrid}>
+                  {profile.contributions?.map((contribution) => (
                     <div 
                       key={contribution.id}
-                      className={styles.animateItem}
-                      style={{ '--item-index': index }}
                     >
                       <WordDisplay
                         translation={contribution}
@@ -281,13 +252,9 @@ export default function PublicProfilePage() {
               </div>
             ) : (
               <>
-                <div className={styles.setsGrid} ref={gridRef}>
-                  {profile.createdSets?.map((set, index) => (
-                    <div
-                      key={set.id}
-                      className={styles.animateItem}
-                      style={{ '--item-index': index }}
-                    >
+                <div className={styles.setsGrid}>
+                  {profile.createdSets?.map((set) => (
+                    <div key={set.id}>
                       <Link to={`/sets/${set.id}`} className={styles.setLink}>
                         <Card hoverable className={styles.setCard}>
                           <div className={styles.setHeader}>

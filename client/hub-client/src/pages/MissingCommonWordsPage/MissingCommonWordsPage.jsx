@@ -47,7 +47,7 @@ export default function MissingCommonWordsPage() {
                 setPagination(result.pagination);
 
                 if (currentPage > 1) {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, behavior: 'auto' });
                 }
             } catch (err) {
                 if (cancelled) return;

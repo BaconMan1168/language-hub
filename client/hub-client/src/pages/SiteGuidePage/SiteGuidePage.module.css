@@ -11,14 +11,6 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.pageHeader.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .pageHeader::before {
@@ -89,14 +81,6 @@
   border-radius: 24px;
   padding: 24px 20px;
   box-shadow: 0 16px 40px rgba(31, 41, 55, 0.08);
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
-}
-
-.sectionNav.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .sectionNavLabel {
@@ -168,14 +152,6 @@
   border-radius: 28px;
   padding: 34px 34px 36px;
   box-shadow: 0 20px 44px rgba(31, 41, 55, 0.07);
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
-}
-
-.sectionBlock.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .sectionHeader {
@@ -225,18 +201,9 @@
   border: 1px solid var(--border-rgba);
   padding: 22px 22px 24px;
   box-shadow: 0 8px 22px rgba(31, 41, 55, 0.05);
-  opacity: 0;
-  transform: translateY(20px);
   transition:
     box-shadow 0.25s ease,
-    transform 0.25s ease,
-    opacity 0.5s ease calc(var(--delay, 0s)),
-    transform 0.5s ease calc(var(--delay, 0s));
-}
-
-.stepCard.visible {
-  opacity: 1;
-  transform: translateY(0);
+    transform 0.25s ease;
 }
 
 .stepCard:hover {
@@ -305,14 +272,6 @@
   border-radius: 24px;
   padding: 34px 38px;
   box-shadow: 0 20px 44px rgba(31, 41, 55, 0.08);
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
-}
-
-.callout.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .calloutTitle {

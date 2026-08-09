@@ -1,51 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useEffect, useRef } from 'react';
 import Button from '../../components/Button/Button';
 import styles from './AboutPage.module.css';
 
 export default function AboutPage() {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
-    const featuresRef = useRef(null);
-    const ctaRef = useRef(null);
-    const teamRef = useRef(null);
-
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-
-        const observerOptions = { threshold: 0.15, rootMargin: '0px' };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(styles.visible);
-                } else {
-                    entry.target.classList.remove(styles.visible);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        if (teamRef.current) {
-            const teamElements = teamRef.current.querySelectorAll(`.${styles.teamMember}`);
-            teamElements.forEach(el => observer.observe(el));
-        }
-
-        if (featuresRef.current) {
-            const featureElements = featuresRef.current.querySelectorAll(`.${styles.feature}`);
-            featureElements.forEach(el => observer.observe(el));
-        }
-
-        if (ctaRef.current) {
-            observer.observe(ctaRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, []);
-
     return (
         <div className={styles.aboutPage}>
             <div className={styles.pageHeader}>
@@ -60,7 +20,7 @@ export default function AboutPage() {
             </div>
 
             <div className={styles.container}>
-                <section className={styles.team} ref={teamRef}>
+                <section className={styles.team}>
                     <div className={styles.teamLabel}>The People Behind This</div>
                     <div className={styles.teamGrid}>
                         <div className={styles.teamMember}>
@@ -93,7 +53,7 @@ export default function AboutPage() {
                     </div>
                 </section>
 
-                <section className={styles.features} ref={featuresRef}>
+                <section className={styles.features}>
                     <div className={styles.feature}>
                         <h2 className={styles.featureTitle}>Why It Matters</h2>
                         <p className={styles.featureDescription}>
@@ -122,7 +82,7 @@ export default function AboutPage() {
                     </div>
                 </section>
 
-                <section className={styles.callToAction} ref={ctaRef}>
+                <section className={styles.callToAction}>
                     <h2 className={styles.ctaTitle}>
                         Every word you share keeps a language alive
                     </h2>

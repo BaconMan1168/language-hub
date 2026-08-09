@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { languageService } from '../../api/languageService';
 import useDebounce from '../../hooks/useDebounce';
@@ -17,7 +17,6 @@ export default function LanguagesPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [pagination, setPagination] = useState(null);
     const [mounted, setMounted] = useState(false);
-    const gridRef = useRef(null);
 
     const debouncedSearch = useDebounce(searchQuery, 500);
     const LANGUAGES_PER_PAGE = 20;
@@ -47,7 +46,7 @@ export default function LanguagesPage() {
                 setPagination(result.pagination);
 
                 if (currentPage > 1) {
-                    window.scrollTo({ top: 200, behavior: 'smooth' });
+                    window.scrollTo({ top: 200, behavior: 'auto' });
                 }
             }
             catch (err) {
@@ -61,32 +60,6 @@ export default function LanguagesPage() {
 
         fetchLanguages();
     }, [debouncedSearch, currentPage]);
-
-    // Scroll animation observer
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion || !gridRef.current) return;
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(styles.visible);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-        items.forEach(item => observer.observe(item));
-
-        return () => observer.disconnect();
-    }, [languages]);
 
     return (
         <div className={`${styles.languagesPage} ${mounted ? styles.mounted : ''}`}>
@@ -147,13 +120,9 @@ export default function LanguagesPage() {
                     </div>
                 ) : (
                     <>
-                        <div className={styles.languagesGrid} ref={gridRef}>
-                            {languages.map((language, index) => (
-                                <div
-                                    key={language.id}
-                                    className={styles.animateItem}
-                                    style={{ '--item-index': index }}
-                                >
+                        <div className={styles.languagesGrid}>
+                            {languages.map((language) => (
+                                <div key={language.id}>
                                     <LanguageCard language={language} />
                                 </div>
                             ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { contributionService } from '../../api/contributionService';
 import WordDisplay from '../../components/WordDisplay/WordDisplay';
 import Pagination from '../../components/Pagination/Pagination';
@@ -12,7 +12,6 @@ export default function UserContributionsPage() {
     const [pagination, setPagination] = useState(null);
     const [mounted, setMounted] = useState(false);
     const [expandedId, setExpandedId] = useState(null);
-    const gridRef = useRef(null);
 
     const CONTRIBUTIONS_PER_PAGE = 20;
 
@@ -32,7 +31,7 @@ export default function UserContributionsPage() {
                 setPagination(result.pagination);
 
                 if (currentPage > 1) {
-                    window.scrollTo({ top: 200, behavior: 'smooth' });
+                    window.scrollTo({ top: 200, behavior: 'auto' });
                 }
             } catch (err) {
                 setError('Failed to load contributions. Please try again.');
@@ -44,32 +43,6 @@ export default function UserContributionsPage() {
 
         fetchContributions();
     }, [currentPage]);
-
-    // Scroll animation observer
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion || !gridRef.current) return;
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(styles.visible);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-        items.forEach(item => observer.observe(item));
-
-        return () => observer.disconnect();
-    }, [contributions]);
 
     return (
         <div className={`${styles.contributionsPage} ${mounted ? styles.mounted : ''}`}>
@@ -121,13 +94,9 @@ export default function UserContributionsPage() {
                             </div>
                         </div>
 
-                        <div className={styles.contributionsGrid} ref={gridRef}>
-                            {contributions.map((contribution, index) => (
-                                <div
-                                    key={contribution.id}
-                                    className={styles.animateItem}
-                                    style={{ '--item-index': index }}
-                                >
+                        <div className={styles.contributionsGrid}>
+                            {contributions.map((contribution) => (
+                                <div key={contribution.id}>
                                     <WordDisplay
                                         translation={contribution}
                                         showAddToSet={true}

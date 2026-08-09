@@ -91,9 +91,6 @@ const guideSections = [
 ];
 
 export default function SiteGuidePage() {
-    const headerRef = useRef(null);
-    const navRef = useRef(null);
-    const contentRef = useRef(null);
     const sectionRefs = useRef({});
     const [activeSection, setActiveSection] = useState(guideSections[0].id);
 
@@ -110,43 +107,14 @@ export default function SiteGuidePage() {
         const section = sectionRefs.current[sectionId];
         if (!section) return;
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const navbarOffset = 104;
         const top = section.getBoundingClientRect().top + window.scrollY - navbarOffset;
 
         window.scrollTo({
             top,
-            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            behavior: 'auto',
         });
     };
-
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add(styles.visible);
-                    }
-                });
-            },
-            { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-        );
-
-        const animatedElements = [
-            headerRef.current,
-            navRef.current,
-            ...Object.values(sectionRefs.current),
-            ...(contentRef.current?.querySelectorAll(`.${styles.stepCard}`) ?? []),
-            contentRef.current?.querySelector(`.${styles.callout}`),
-        ].filter(Boolean);
-
-        animatedElements.forEach((element) => observer.observe(element));
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         const sections = Object.entries(sectionRefs.current);
@@ -175,7 +143,7 @@ export default function SiteGuidePage() {
 
     return (
         <div className={styles.siteGuidePage}>
-            <div className={styles.pageHeader} ref={headerRef}>
+            <div className={styles.pageHeader}>
                 <div className={styles.pageHeaderInner}>
                     <span className={styles.badge}>How It Works</span>
                     <h1 className={styles.pageTitle}>Site Guide</h1>
@@ -187,7 +155,7 @@ export default function SiteGuidePage() {
             </div>
 
             <div className={styles.layout}>
-                <aside className={styles.sectionNav} ref={navRef}>
+                <aside className={styles.sectionNav}>
                     <p className={styles.sectionNavLabel}>On this page</p>
                     <div className={styles.sectionNavLinks}>
                         {guideSections.map((section) => (
@@ -204,7 +172,7 @@ export default function SiteGuidePage() {
                     </div>
                 </aside>
 
-                <div className={styles.content} ref={contentRef}>
+                <div className={styles.content}>
                     {guideSections.map((section) => (
                         <section
                             key={section.id}

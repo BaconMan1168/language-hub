@@ -639,20 +639,6 @@
   margin-bottom: 32px;
 }
 
-.animateItem {
-  min-width: 0;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  transition:
-    opacity   0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--item-index, 0) * 0.05s);
-}
-.animateItem.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
 .loadingState,
 .empty {
   text-align: center;
@@ -885,13 +871,7 @@ a.podiumCard:hover {
   .languageDetailPage::after {
     animation: none;
   }
-  .languageName { animation: none; }
-  .animateItem {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .loadingSpinner {
+  .languageName { animation: none; }  .loadingSpinner {
     animation: none;
     border-top-color: transparent;
     border-right-color: #C0763A;

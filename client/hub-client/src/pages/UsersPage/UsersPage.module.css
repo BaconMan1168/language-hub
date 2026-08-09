@@ -121,19 +121,6 @@
   margin-bottom: 48px;
 }
 
-.animateItem {
-  opacity: 0;
-  transform: translateY(40px) scale(0.96);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--item-index, 0) * 0.05s);
-}
-
-.animateItem.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
 .userLink {
   text-decoration: none;
   color: inherit;
@@ -356,12 +343,6 @@
   .empty,
   .error {
     animation: none;
-  }
-
-  .animateItem {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 
   .userCard {

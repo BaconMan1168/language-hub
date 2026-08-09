@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { profileService } from '../../api/profileService';
 import useDebounce from '../../hooks/useDebounce';
@@ -16,7 +16,6 @@ export default function UsersPage() {
     const [pagination, setPagination] = useState(null);
     const [communityStats, setCommunityStats] = useState(null);
     const [mounted, setMounted] = useState(false);
-    const gridRef = useRef(null);
 
     const debouncedSearch = useDebounce(searchQuery, 500);
     const USERS_PER_PAGE = 20;
@@ -42,7 +41,7 @@ export default function UsersPage() {
                 setCommunityStats(result.communityStats);
 
                 if (currentPage > 1) {
-                    window.scrollTo({ top: 200, behavior: 'smooth' });
+                    window.scrollTo({ top: 200, behavior: 'auto' });
                 }
             } catch (err) {
                 setError('Failed to load users. Please try again.');
@@ -54,32 +53,6 @@ export default function UsersPage() {
 
         fetchUsers();
     }, [debouncedSearch, currentPage]);
-
-    // Scroll animation observer
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion || !gridRef.current) return;
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(styles.visible);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-        items.forEach(item => observer.observe(item));
-
-        return () => observer.disconnect();
-    }, [users]);
 
     return (
         <div className={`${styles.usersPage} ${mounted ? styles.mounted : ''}`}>
@@ -140,13 +113,9 @@ export default function UsersPage() {
                     </div>
                 ) : (
                     <>
-                        <div className={styles.usersGrid} ref={gridRef}>
-                            {users.map((user, index) => (
-                                <div
-                                    key={user.id}
-                                    className={styles.animateItem}
-                                    style={{ '--item-index': index }}
-                                >
+                        <div className={styles.usersGrid}>
+                            {users.map((user) => (
+                                <div key={user.id}>
                                     <Link to={`/profile/${user.id}`} className={styles.userLink}>
                                         <Card hoverable className={styles.userCard}>
                                             <div className={styles.userHeader}>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { profileService } from '../../api/profileService';
@@ -19,7 +19,6 @@ export default function ProfilePage() {
   const [expandedId, setExpandedId] = useState(null);
   const [contributionsPage, setContributionsPage] = useState(1);
   const [setsPage, setSetsPage] = useState(1);
-  const contentRef = useRef(null);
 
   useEffect(() => {
     setExpandedId(null);
@@ -53,32 +52,6 @@ export default function ProfilePage() {
 
     fetchProfile();
   }, [isAuthenticated, authLoading, contributionsPage, setsPage]);
-
-  // Scroll animation observer for grid items
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion || !contentRef.current) return;
-
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(styles.visible);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    const items = contentRef.current.querySelectorAll(`.${styles.animateItem}`);
-    items.forEach(item => observer.observe(item));
-
-    return () => observer.disconnect();
-  }, [activeTab, profile]);
 
   const handleReminderChange = async (newReminderType) => {
     setProfile((prev) => ({ ...prev, reminderType: newReminderType }));
@@ -228,7 +201,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Content Sections */}
-        <div className={styles.contentSection} ref={contentRef}>
+        <div className={styles.contentSection}>
           {activeTab === 'contributions' && (
             <>
               {profile.contributions?.length === 0 ? (
@@ -246,11 +219,9 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <div className={styles.contributionsGrid}>
-                    {profile.contributions?.map((contribution, index) => (
+                    {profile.contributions?.map((contribution) => (
                       <div 
                         key={contribution.id} 
-                        className={styles.animateItem}
-                        style={{ '--item-index': index }}
                       >
                         <WordDisplay
                           translation={contribution}
@@ -292,12 +263,11 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <div className={styles.setsGrid}>
-                    {profile.createdSets?.map((set, index) => (
+                    {profile.createdSets?.map((set) => (
                       <Link 
                         key={set.id} 
                         to={`/sets/${set.id}`} 
-                        className={`${styles.setLink} ${styles.animateItem}`}
-                        style={{ '--item-index': index }}
+                        className={styles.setLink}
                       >
                         <Card hoverable className={styles.setCard}>
                           <div className={styles.setHeader}>

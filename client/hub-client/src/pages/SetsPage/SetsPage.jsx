@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { setService } from '../../api/setService';
 import { useAuth } from '../../context/AuthContext';
@@ -24,7 +24,6 @@ export default function SetsPage(){
     const [mounted, setMounted] = useState(false);
     const [helpOpen, setHelpOpen] = useState(false);
     const [pendingDelete, setPendingDelete] = useState(null);
-    const gridRef = useRef(null);
 
     const debouncedSearch = useDebounce(searchQuery, 500);
     const SETS_PER_PAGE = 12;
@@ -73,7 +72,7 @@ export default function SetsPage(){
                     setPagination(result.pagination);
 
                     if (currentPage > 1) {
-                        window.scrollTo({ top: 200, behavior: 'smooth' });
+                        window.scrollTo({ top: 200, behavior: 'auto' });
                     }
                 }
             } catch (err) {
@@ -91,32 +90,6 @@ export default function SetsPage(){
         fetchSets();
         return () => { ignore = true; };
     }, [viewMode, debouncedSearch, currentPage, isAuthenticated]);
-
-    // Scroll animation observer
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion || !gridRef.current) return;
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(styles.visible);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-        items.forEach(item => observer.observe(item));
-
-        return () => observer.disconnect();
-    }, [sets]);
 
     const handleDeleteClick = (setId, setName, e) => {
         e.preventDefault();
@@ -276,13 +249,9 @@ export default function SetsPage(){
                 ) : (
                     /* Sets Grid */
                     <>
-                        <div className={styles.setsGrid} ref={gridRef}>
-                            {sets.map((set, index) => (
-                                <div
-                                    key={set.id}
-                                    className={styles.animateItem}
-                                    style={{ '--item-index': index }}
-                                >
+                        <div className={styles.setsGrid}>
+                            {sets.map((set) => (
+                                <div key={set.id}>
                                     <Link to={`/sets/${set.id}`} className={styles.setLink}>
                                         <Card hoverable className={styles.setCard}>
                                             <div className={styles.setHeader}>

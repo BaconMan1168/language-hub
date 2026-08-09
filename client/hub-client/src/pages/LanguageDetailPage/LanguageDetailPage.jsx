@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { languageService } from '../../api/languageService';
 import { useAuth } from '../../context/AuthContext';
@@ -59,7 +59,6 @@ export default function LanguageDetailPage() {
 
     const [mounted, setMounted] = useState(false);
     const debouncedSearch = useDebounce(searchQuery, 400);
-    const gridRef = useRef(null);
 
     useEffect(() => { setMounted(true); }, []);
 
@@ -162,20 +161,6 @@ export default function LanguageDetailPage() {
         fetchTranslations();
         return () => { cancelled = true; };
     }, [slug, debouncedSearch, searchMode, statusMode, sortBy, coreWordsOnly, currentPage, retryCount]);
-
-    useEffect(() => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion || !gridRef.current) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add(styles.visible); }),
-            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-        );
-
-        const items = gridRef.current.querySelectorAll(`.${styles.animateItem}`);
-        items.forEach(item => observer.observe(item));
-        return () => observer.disconnect();
-    }, [translations, translationsOpen]);
 
     const handleRetry = useCallback(() => {
         setRetryCount(c => c + 1);
@@ -557,12 +542,10 @@ export default function LanguageDetailPage() {
                                         </div>
                                     ) : (
                                         <>
-                                            <div className={styles.translationsGrid} ref={gridRef}>
-                                                {translations.map((translation, index) => (
+                                            <div className={styles.translationsGrid}>
+                                                {translations.map((translation) => (
                                                     <div
                                                         key={translation.id}
-                                                        className={styles.animateItem}
-                                                        style={{ '--item-index': index }}
                                                     >
                                                         <WordDisplay
                                                             translation={translation}

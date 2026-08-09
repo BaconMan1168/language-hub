@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { gameService } from '../../api/gameService';
 import { setService } from '../../api/setService';
@@ -13,7 +13,6 @@ export default function GameSessionsPage() {
   const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState('ALL');
   const [mounted, setMounted] = useState(false);
-  const gridRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -44,49 +43,6 @@ export default function GameSessionsPage() {
   const filteredSessions = filterType === 'ALL' 
     ? sessions 
     : sessions.filter((s) => s.gameType === filterType);
-
-  // Scroll animation observer
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion || !gridRef.current) return;
-
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(styles.visible);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-      const items = gridRef.current?.querySelectorAll(`.${styles.animateItem}`);
-      if (!items) return;
-      
-      items.forEach(item => {
-        // Check if item is already in viewport
-        const rect = item.getBoundingClientRect();
-        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (isInViewport) {
-          // Immediately add visible class for items already in view
-          item.classList.add(styles.visible);
-        } else {
-          // Observe items not yet in view
-          observer.observe(item);
-        }
-      });
-    }, 50);
-
-    return () => observer.disconnect();
-  }, [sessions, filterType]); // Use state values instead of computed value
 
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -258,13 +214,9 @@ export default function GameSessionsPage() {
             </Link>
           </div>
         ) : (
-          <div className={styles.sessionsGrid} ref={gridRef}>
-            {filteredSessions.map((session, index) => (
-              <div
-                key={session.id}
-                className={styles.animateItem}
-                style={{ '--item-index': index }}
-              >
+          <div className={styles.sessionsGrid}>
+            {filteredSessions.map((session) => (
+              <div key={session.id}>
                 <Card className={styles.sessionCard}>
                   <div className={styles.sessionHeader}>
                     <div className={styles.gameTypeInfo}>
