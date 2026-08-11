@@ -51,6 +51,36 @@ const contributeTranslation = [
     }
 ]
 
+const completeMissingTranslationFields = [
+    auth,
+    async (req, res, next) => {
+        const { id: userId } = req.user;
+        const { translationId } = req.params;
+
+        try {
+            const updatedTranslation = await contributeService.completeMissingTranslationFields(
+                userId,
+                translationId,
+                req.body
+            );
+
+            res.status(200).json(updatedTranslation);
+        } catch (err) {
+            if (err.message === 'Translation does not exist') {
+                return res.status(404).json({ message: err.message });
+            }
+
+            if (err.message === 'No missing fields were provided' || err.code === 'P2025') {
+                return res.status(409).json({
+                    message: 'These fields have already been completed. Refresh and try again.'
+                });
+            }
+
+            next(err);
+        }
+    }
+]
+
 const getUserContributions = [
     auth,
     async (req, res, next) => {
@@ -71,6 +101,7 @@ const getUserContributions = [
 
 const contributionController = {
     contributeTranslation,
+    completeMissingTranslationFields,
     getUserContributions
 }
 

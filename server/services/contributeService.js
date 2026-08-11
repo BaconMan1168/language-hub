@@ -9,6 +9,13 @@ const LANGUAGE_SUMMARY_SELECT = {
     slug: true
 };
 
+const COMPLETABLE_FIELDS = [
+    'exampleSentence',
+    'audioUrl',
+    'partOfSpeech',
+    'usageComment'
+];
+
 async function contributeTranslation(
     userId,
     {
@@ -72,6 +79,72 @@ async function contributeTranslation(
     return contributedTranslation;
 }
 
+export async function completeMissingTranslationFields(
+    userId,
+    translationId,
+    proposedData,
+    prismaClient = prisma
+) {
+    const translation = await prismaClient.translation.findUnique({
+        where: { id: translationId },
+        select: {
+            authorId: true,
+            exampleSentence: true,
+            audioUrl: true,
+            partOfSpeech: true,
+            usageComment: true,
+            secondaryAuthors: {
+                where: { id: userId },
+                select: { id: true }
+            }
+        }
+    });
+
+    if (!translation) throw new Error('Translation does not exist');
+
+    const safeData = Object.fromEntries(
+        COMPLETABLE_FIELDS.flatMap((field) => {
+            const value = proposedData[field];
+            return translation[field] == null && typeof value === 'string' && value.trim()
+                ? [[field, value.trim()]]
+                : [];
+        })
+    );
+
+    if (Object.keys(safeData).length === 0) {
+        throw new Error('No missing fields were provided');
+    }
+
+    const shouldCreditContributor =
+        translation.authorId !== userId && translation.secondaryAuthors.length === 0;
+
+    const updatedTranslation = await prismaClient.translation.update({
+        where: {
+            id: translationId,
+            ...Object.fromEntries(Object.keys(safeData).map((field) => [field, null]))
+        },
+        data: {
+            ...safeData,
+            ...(shouldCreditContributor
+                ? { secondaryAuthors: { connect: { id: userId } } }
+                : {})
+        },
+        include: {
+            language: true,
+            author: true,
+            secondaryAuthors: true
+        }
+    });
+
+    if (updatedTranslation.audioUrl) {
+        updatedTranslation.audioUrl = await storageService.generateDownloadUrl(
+            updatedTranslation.audioUrl
+        );
+    }
+
+    return updatedTranslation;
+}
+
 async function getUserContributions(userId, page = 1, limit = 20){
     if (!userId) throw new Error('Must be logged in to view contributions');
     
@@ -122,6 +195,7 @@ async function getUserContributions(userId, page = 1, limit = 20){
 
 const contributeService = {
     contributeTranslation,
+    completeMissingTranslationFields,
     getUserContributions
 }
 
