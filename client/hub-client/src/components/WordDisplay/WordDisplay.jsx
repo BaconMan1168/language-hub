@@ -114,9 +114,15 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
     const [loadingSets, setLoadingSets] = useState(false);
     const [showContributeModal, setShowContributeModal] = useState(false);
     const [fieldsToContribute, setFieldsToContribute] = useState([]);
+    const [translationOverride, setTranslationOverride] = useState(null);
     const wrapperRef = useRef(null);
     const previousHeightRef = useRef(null);
     const heightAnimationRef = useRef(null);
+    const displayedTranslation = translationOverride ?? translation;
+
+    useEffect(() => {
+        setTranslationOverride(null);
+    }, [translation]);
 
     useLayoutEffect(() => {
         const wrapper = wrapperRef.current;
@@ -192,17 +198,17 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
                         /* Collapsed View */
                         <div className={styles.collapsedView}>
                             <div className={styles.collapsedWordGroup}>
-                                <h2 className={styles.wordCollapsed}>{translation.wordText}</h2>
-                                {translation.englishDefinition && (
-                                    <span className={styles.wordEnglish}>{translation.englishDefinition}</span>
+                                <h2 className={styles.wordCollapsed}>{displayedTranslation.wordText}</h2>
+                                {displayedTranslation.englishDefinition && (
+                                    <span className={styles.wordEnglish}>{displayedTranslation.englishDefinition}</span>
                                 )}
                             </div>
 
                             <div className={styles.collapsedRight}>
-                                {translation.status === 'VERIFIED' && (
+                                {displayedTranslation.status === 'VERIFIED' && (
                                     <div className={styles.verifiedBadgeSmall}>✓</div>
                                 )}
-                                <MissingFieldsBadge translation={translation} setShowContributeModal={setShowContributeModal} setFieldsToContribute={setFieldsToContribute} isCardExpanded={false} />
+                                <MissingFieldsBadge translation={displayedTranslation} setShowContributeModal={setShowContributeModal} setFieldsToContribute={setFieldsToContribute} isCardExpanded={false} />
                                 <svg className={styles.detailsIndicator} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
@@ -213,15 +219,15 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
                         <div className={styles.expandedView}>
                             <div className={styles.expandedHeader}>
                                 <div className={styles.wordHeader}>
-                                    <h2 className={styles.word}>{translation.wordText}</h2>
-                                    {translation.partOfSpeech && (
+                                    <h2 className={styles.word}>{displayedTranslation.wordText}</h2>
+                                    {displayedTranslation.partOfSpeech && (
                                         <span className={styles.partOfSpeechBadge}>
-                                            {translation.partOfSpeech}
+                                            {displayedTranslation.partOfSpeech}
                                         </span>
                                     )}
                                 </div>
                                 <div className={styles.expandedHeaderActions}>
-                                    <MissingFieldsBadge translation={translation} setShowContributeModal={setShowContributeModal} setFieldsToContribute={setFieldsToContribute} isCardExpanded={true} />
+                                    <MissingFieldsBadge translation={displayedTranslation} setShowContributeModal={setShowContributeModal} setFieldsToContribute={setFieldsToContribute} isCardExpanded={true} />
                                     <button
                                         className={styles.collapseButton}
                                         onClick={handleCollapse}
@@ -237,28 +243,28 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
 
                             <div className={styles.divider} />
 
-                            <p className={styles.definition}>{translation.englishDefinition}</p>
+                            <p className={styles.definition}>{displayedTranslation.englishDefinition}</p>
 
-                            {translation.audioUrl && (
+                            {displayedTranslation.audioUrl && (
                                 <>
                                     <div className={styles.divider} />
                                     <div className={styles.audioPlayer}>
                                         <label className={styles.audioLabel}>Audio Pronunciation:</label>
-                                        <audio controls src={translation.audioUrl} className={styles.audio}>
+                                        <audio controls src={displayedTranslation.audioUrl} className={styles.audio}>
                                             Your browser does not support the audio element.
                                         </audio>
                                     </div>
                                 </>
                             )}
 
-                            {translation.exampleSentence && (
+                            {displayedTranslation.exampleSentence && (
                                 <>
                                     <div className={styles.divider} />
-                                    <p className={styles.example}>{translation.exampleSentence}</p>
+                                    <p className={styles.example}>{displayedTranslation.exampleSentence}</p>
                                 </>
                             )}
 
-                            {translation.usageComment && (
+                            {displayedTranslation.usageComment && (
                                 <>
                                     <div className={styles.divider} />
                                     <div className={styles.usageComment}>
@@ -268,36 +274,36 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
                                             </svg>
                                             Usage Note
                                         </span>
-                                        <p className={styles.usageCommentText}>{translation.usageComment}</p>
+                                        <p className={styles.usageCommentText}>{displayedTranslation.usageComment}</p>
                                     </div>
                                 </>
                             )}
 
                             <div className={styles.footer}>
                                 <div className={styles.footerLeft}>
-                                    {translation.status === 'VERIFIED' && (
+                                    {displayedTranslation.status === 'VERIFIED' && (
                                         <div className={styles.verifiedBadge}>
                                             <span>Verified Translation</span>
                                         </div>
                                     )}
-                                    {translation.author && (
+                                    {displayedTranslation.author && (
                                         <div className={styles.attribution}>
                                             <span className={styles.attributionText}>Contributed by</span>
                                             <Link
-                                                to={`/profile/${translation.author.id}`}
+                                                to={`/profile/${displayedTranslation.author.id}`}
                                                 className={styles.authorLink}
                                                 onClick={(e) => e.stopPropagation()}
                                             >
-                                                @{translation.author.username}
+                                                @{displayedTranslation.author.username}
                                             </Link>
 
-                                            {translation.secondaryAuthors?.length > 0 && (
+                                            {displayedTranslation.secondaryAuthors?.length > 0 && (
                                                 <div className={styles.secondaryAuthors}>
                                                   <span className={styles.moreAuthorsLabel}>
-                                                    +{translation.secondaryAuthors.length} more
+                                                    +{displayedTranslation.secondaryAuthors.length} more
                                                   </span>
                                                   <div className={styles.secondaryAuthorsDropdown}>
-                                                    {translation.secondaryAuthors.map((author) => (
+                                                    {displayedTranslation.secondaryAuthors.map((author) => (
                                                       <Link
                                                         key={author.id}
                                                         to={`/profile/${author.id}`}
@@ -353,9 +359,10 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
 
             {showContributeModal && createPortal(
                 <ContributeMissingModal
-                    translation={translation}
+                    translation={displayedTranslation}
                     fieldsToContribute={fieldsToContribute}
                     onClose={() => setShowContributeModal(false)}
+                    onComplete={setTranslationOverride}
                 />,
                 document.body
             )}

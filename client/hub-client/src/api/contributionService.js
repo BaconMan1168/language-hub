@@ -14,6 +14,14 @@ export const contributionService = {
         return response.data;
     },
 
+    completeMissingFields: async (translationId, fields) => {
+        const response = await api.patch(
+            `/contributions/${translationId}/missing-fields`,
+            fields
+        );
+        return response.data;
+    },
+
     getAudioUploadUrl: async (fileName, contentType) => {
         const response = await api.post('/audio/upload-url', {
             fileName,

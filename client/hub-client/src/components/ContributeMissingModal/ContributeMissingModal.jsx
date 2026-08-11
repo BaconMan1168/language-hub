@@ -4,10 +4,9 @@ import Card from '../Card/Card';
 import styles from './ContributeMissingModal.module.css';
 import Input from '../Input/Input';
 import { contributionService } from '../../api/contributionService';
-import { translationUpdateRequestService } from '../../api/translationUpdateRequestService';
 import { POS_OPTIONS } from '../../data/partsOfSpeech';
 
-export default function ContributeMissingModal({ translation, fieldsToContribute, onClose }){
+export default function ContributeMissingModal({ translation, fieldsToContribute, onClose, onComplete }){
     const [audioFile, setAudioFile] = useState(null);
     const [audioMode, setAudioMode] = useState('upload'); // 'upload' or 'record'
     const [isRecording, setIsRecording] = useState(false);
@@ -282,14 +281,15 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
             setUploadingAudio(false);
         }
         
-        await translationUpdateRequestService.addTranslationUpdateRequest(
+        const updatedTranslation = await contributionService.completeMissingFields(
           translation.id,
-          translation.languageId,
           {
             ...cleanFormData(formData),
             ...(audioS3Key ? { audioUrl: audioS3Key } : {})
           }
         );
+
+        onComplete(updatedTranslation);
 
         setSuccess(true);
         setErrors({});
@@ -333,7 +333,7 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                 
                 {success && (
                     <div className={styles.success}>
-                        Update Request submitted successfully. Thank you for your contribution!
+                        Missing fields added successfully. Thank you for your contribution!
                     </div>
                 )}
 
