@@ -100,12 +100,15 @@ function AdminRoute({ children }){
 }
 
 function AppContent(){
+    const location = useLocation();
+
     return (
         <>
             <SeoUpdater />
             <Navbar />
             <Suspense fallback={<RouteLoading />}>
-                <Routes>
+                <div key={location.pathname} className="page-enter">
+                    <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<AboutPage />} />
@@ -233,7 +236,8 @@ function AppContent(){
                         }
                     />
                     <Route path="*" element={<NotFoundPage />} />
-                </Routes>
+                    </Routes>
+                </div>
             </Suspense>
         </>
     );
