@@ -71,12 +71,12 @@ const guideSections = [
             {
                 number: '05',
                 title: 'The Alert Symbol (⚠) — Missing Fields',
-                description: 'A yellow warning triangle means the entry is missing optional details like a pronunciation guide, audio, or example sentence. Expand the card by clicking it, then click the warning icon to fill in those missing fields and improve the entry.',
+                description: 'A yellow warning triangle means the entry is missing pronunciation audio or a part of speech. Example sentences and usage notes are optional and do not trigger this alert.',
             },
             {
                 number: '06',
                 title: 'Expanding a Card',
-                description: 'Click any word card to expand it and see its full details. Once expanded, the alert icon becomes active — click it to see exactly which fields are missing and contribute them directly.',
+                description: 'Click any word card to see its full details. The subtle plus icon on an expanded card shows details you can add, including an example sentence or usage note.',
             },
         ],
     },
