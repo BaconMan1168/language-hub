@@ -107,6 +107,7 @@ export default function ContributePage() {
         wordText: '',
         englishDefinition: '',
         exampleSentence: '',
+        englishExampleSentence: '',
         partOfSpeech: '',
         usageComment: '',
     });
@@ -130,10 +131,16 @@ export default function ContributePage() {
     const [showIPModal, setShowIPModal] = useState(false);
     const [prefillWord, setPrefillWord] = useState('');
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+    const [showEnglishExampleInput, setShowEnglishExampleInput] = useState(false);
+    const englishExampleInputRef = useRef(null);
 
     const selectedSlug = languages.find(l => l.id === formData.languageId)?.slug ?? null;
 
     useEffect(() => { setMounted(true); }, []);
+
+    useEffect(() => {
+        if (showEnglishExampleInput) englishExampleInputRef.current?.focus();
+    }, [showEnglishExampleInput]);
 
     useEffect(() => {
         let interval;
@@ -403,9 +410,11 @@ export default function ContributePage() {
                 wordText: '',
                 englishDefinition: '',
                 exampleSentence: '',
+                englishExampleSentence: '',
                 partOfSpeech: '',
                 usageComment: '',
             });
+            setShowEnglishExampleInput(false);
             setAudioFile(null);
             setAudioBlob(null);
             setRecordingTime(0);
@@ -753,6 +762,40 @@ export default function ContributePage() {
                                                     rows="3"
                                                     placeholder="Optional: Give an example sentence in the language"
                                                 />
+
+                                                {formData.exampleSentence.trim() && !showEnglishExampleInput && (
+                                                    <button
+                                                        type="button"
+                                                        className={styles.translationPrompt}
+                                                        onClick={() => setShowEnglishExampleInput(true)}
+                                                        aria-expanded="false"
+                                                        aria-controls="englishExampleSentenceField"
+                                                    >
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                                        </svg>
+                                                        Add English translation for this sentence?
+                                                    </button>
+                                                )}
+
+                                                {formData.exampleSentence.trim() && showEnglishExampleInput && (
+                                                    <div id="englishExampleSentenceField" className={styles.translationField}>
+                                                        <label htmlFor="englishExampleSentence" className={styles.translationLabel}>
+                                                            English translation <span className={styles.optional}>(optional)</span>
+                                                        </label>
+                                                        <textarea
+                                                            ref={englishExampleInputRef}
+                                                            id="englishExampleSentence"
+                                                            name="englishExampleSentence"
+                                                            value={formData.englishExampleSentence}
+                                                            onChange={handleChange}
+                                                            className={styles.textarea}
+                                                            rows="2"
+                                                            placeholder="Translate the example sentence into English"
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className={styles.formGroup}>
@@ -789,6 +832,9 @@ export default function ContributePage() {
                                                     <ReviewRow label="Audio" value={audioFile ? audioFile.name : 'Recorded audio'} />
                                                 )}
                                                 {formData.exampleSentence && <ReviewRow label="Example Sentence" value={formData.exampleSentence} />}
+                                                {formData.exampleSentence && formData.englishExampleSentence && (
+                                                    <ReviewRow label="English Sentence Translation" value={formData.englishExampleSentence} />
+                                                )}
                                                 {formData.usageComment && <ReviewRow label="Usage Comment" value={formData.usageComment} />}
                                             </dl>
 
