@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../Card/Card';
 import Button from '../Button/Button';
@@ -114,6 +114,41 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
     const [loadingSets, setLoadingSets] = useState(false);
     const [showContributeModal, setShowContributeModal] = useState(false);
     const [fieldsToContribute, setFieldsToContribute] = useState([]);
+    const wrapperRef = useRef(null);
+    const previousHeightRef = useRef(null);
+    const heightAnimationRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const wrapper = wrapperRef.current;
+        if (!wrapper) return;
+
+        const nextHeight = wrapper.scrollHeight;
+        const previousHeight = previousHeightRef.current;
+        previousHeightRef.current = nextHeight;
+
+        if (
+            previousHeight === null ||
+            previousHeight === nextHeight ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+            return;
+        }
+
+        heightAnimationRef.current?.cancel();
+        const animation = wrapper.animate(
+            [
+                { height: `${previousHeight}px` },
+                { height: `${nextHeight}px` },
+            ],
+            {
+                duration: 650,
+                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            }
+        );
+        heightAnimationRef.current = animation;
+
+        return () => animation.cancel();
+    }, [isExpanded]);
 
     useEffect(() => {
         const checkSets = async () => {
@@ -148,6 +183,7 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
     return (
         <>
             <div
+                ref={wrapperRef}
                 className={`${styles.wordDisplayWrapper} ${isExpanded ? styles.expanded : ''}`}
                 onClick={handleCardClick}
             >
