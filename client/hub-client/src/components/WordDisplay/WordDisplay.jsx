@@ -16,11 +16,16 @@ const COMPLETABLE_FIELDS = [
     { key: 'partOfSpeech',    label: 'Part of speech' },
 ];
 
+const COMPACT_ALERT_FIELDS = new Set(['audioUrl', 'partOfSpeech']);
+
 function MissingFieldsBadge({ translation, setShowContributeModal, setFieldsToContribute, isCardExpanded }) {
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
 
-    const missingFields = COMPLETABLE_FIELDS.filter(f => !translation?.[f.key]);
+    const allMissingFields = COMPLETABLE_FIELDS.filter(f => !translation?.[f.key]);
+    const missingFields = isCardExpanded
+        ? allMissingFields
+        : allMissingFields.filter(f => COMPACT_ALERT_FIELDS.has(f.key));
 
     // Close on outside click
     useEffect(() => {
@@ -50,34 +55,42 @@ function MissingFieldsBadge({ translation, setShowContributeModal, setFieldsToCo
             ref={wrapperRef}
         >
             <button
-                className={`${styles.missingBadge} ${open ? styles.missingBadgeActive : ''}`}
+                className={`${styles.missingBadge} ${isCardExpanded ? styles.detailsBadge : ''} ${open ? styles.missingBadgeActive : ''}`}
                 onClick={(e) => {
                     e.stopPropagation();
                     setOpen(prev => !prev);
                 }}
-                aria-label={`${missingFields.length} missing field${missingFields.length !== 1 ? 's' : ''}`}
+                aria-label={isCardExpanded
+                    ? `${missingFields.length} detail${missingFields.length !== 1 ? 's' : ''} available to add`
+                    : `${missingFields.length} missing field${missingFields.length !== 1 ? 's' : ''}`}
                 aria-expanded={open}
             >
-                {/* Warning triangle icon */}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                    <line x1="12" y1="9" x2="12" y2="13" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
+                {isCardExpanded ? (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                )}
             </button>
 
             {open && (
                 <div
-                    className={styles.missingPopup}
+                    className={`${styles.missingPopup} ${isCardExpanded ? styles.detailsPopup : ''}`}
                     role="dialog"
                     aria-label="Missing fields"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <p className={styles.missingPopupTitle}>Missing fields</p>
+                    <p className={styles.missingPopupTitle}>{isCardExpanded ? 'Add details' : 'Missing fields'}</p>
                     <ul className={styles.missingList}>
                         {missingFields.map(f => (
                             <li key={f.key} className={styles.missingListItem}>
-                                <span className={styles.missingDot} />
+                                <span className={`${styles.missingDot} ${isCardExpanded ? styles.detailsDot : ''}`} />
                                 {f.label}
                             </li>
                         ))}
@@ -94,7 +107,7 @@ function MissingFieldsBadge({ translation, setShowContributeModal, setFieldsToCo
                           }}
 
                         >
-                          Contribute Missing Fields
+                          {isCardExpanded ? 'Contribute details' : 'Contribute Missing Fields'}
                         </button>
                     </div>
                 </div>
@@ -260,7 +273,15 @@ export default function WordDisplay({ translation, showAddToSet = true, defaultE
                             {displayedTranslation.exampleSentence && (
                                 <>
                                     <div className={styles.divider} />
-                                    <p className={styles.example}>{displayedTranslation.exampleSentence}</p>
+                                    <div className={styles.exampleGroup}>
+                                        <p className={styles.example}>{displayedTranslation.exampleSentence}</p>
+                                        {displayedTranslation.englishExampleSentence && (
+                                            <div className={styles.englishExampleSentence}>
+                                                <span className={styles.englishExampleLabel}>English translation</span>
+                                                <p>{displayedTranslation.englishExampleSentence}</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </>
                             )}
 

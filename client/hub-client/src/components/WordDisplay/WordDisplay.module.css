@@ -292,6 +292,35 @@
   font-family: 'Fraunces', serif;
 }
 
+.exampleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.englishExampleSentence {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding: 0 16px;
+}
+
+.englishExampleLabel {
+  color: var(--text-placeholder);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.englishExampleSentence p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -558,6 +587,19 @@
   color: #92400E;
 }
 
+.detailsBadge {
+  background: var(--disabled-bg);
+  border-color: var(--border-rgba);
+  color: var(--text-secondary);
+}
+
+.detailsBadge:hover,
+.detailsBadge.missingBadgeActive {
+  background: rgba(192, 118, 58, 0.08);
+  border-color: rgba(192, 118, 58, 0.28);
+  color: #C0763A;
+}
+
 /* ── Missing fields popup ──────────────────────────────────────────────────── */
 
 .missingPopup {
@@ -579,6 +621,17 @@
     0 10px 24px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(234, 179, 8, 0.08);
   transform-origin: top right;
+}
+
+.detailsPopup {
+  border-color: var(--border-rgba);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.04),
+    0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.detailsPopup .missingPopupTitle {
+  color: var(--text-primary);
 }
 
 /* Amber top-edge accent line */
@@ -630,6 +683,10 @@
   flex-shrink: 0;
 }
 
+.detailsDot {
+  background: rgba(192, 118, 58, 0.65);
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .wordDisplay,
@@ -642,6 +699,7 @@
   .divider,
   .definition,
   .example,
+  .englishExampleSentence,
   .example::before,
   .footer,
   .verifiedBadge,

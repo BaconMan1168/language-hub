@@ -23,11 +23,6 @@ const STATUS_OPTIONS = [
     { value: 'VERIFIED', label: 'Verified only' },
 ];
 
-const SEARCH_MODE_OPTIONS = [
-    { value: 'text',       label: 'Search by word' },
-    { value: 'definition', label: 'Search by definition' },
-];
-
 const TRANSLATIONS_PER_PAGE = 20;
 const TOTAL_COMMON_WORDS = 2809;
 
@@ -368,7 +363,10 @@ export default function LanguageDetailPage() {
                                         onChange={e => { setSearchMode(e.target.value); setSearchQuery(''); }}
                                         aria-label="Search mode"
                                     >
-                                        {SEARCH_MODE_OPTIONS.map(o => (
+                                        {[
+                                            { value: 'text', label: `Search by ${language.name} word` },
+                                            { value: 'definition', label: 'Search by English word' },
+                                        ].map(o => (
                                             <option key={o.value} value={o.value}>{o.label}</option>
                                         ))}
                                     </select>
@@ -475,7 +473,7 @@ export default function LanguageDetailPage() {
                                 <line x1="12" y1="9" x2="12" y2="13" />
                                 <line x1="12" y1="17" x2="12.01" y2="17" />
                             </svg>
-                            <span className={styles.legendText}>Missing fields — expand the card, then click this icon to fill them in</span>
+                            <span className={styles.legendText}>Missing pronunciation or part of speech — expand the card to contribute details</span>
                         </div>
                         <div className={styles.legendItem}>
                             <svg className={styles.legendHint} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
