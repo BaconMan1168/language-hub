@@ -535,6 +535,13 @@
   color: #C0763A;
 }
 
+.optional {
+  margin-left: 4px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
 .select,
 .textarea {
   font-family: 'IBM Plex Sans', system-ui, sans-serif;

@@ -536,7 +536,9 @@ export default function ContributePage() {
                                     {currentStep === 2 && (
                                         <div className={styles.stepFields}>
                                             <div className={styles.formGroup}>
-                                                <label className={styles.label}>Part of Speech</label>
+                                                <label className={styles.label}>
+                                                    Part of Speech <span className={styles.optional}>(optional)</span>
+                                                </label>
                                                 <p className={styles.posHint}>Hover or focus a chip to see its definition.</p>
                                                 <div className={styles.posGrid}>
                                                     {POS_OPTIONS.map(option => (
@@ -575,7 +577,9 @@ export default function ContributePage() {
                                     {currentStep === 3 && (
                                         <div className={styles.stepFields}>
                                             <div className={styles.formGroup}>
-                                                <label className={styles.label}>Audio Pronunciation</label>
+                                                <label className={styles.label}>
+                                                    Audio Pronunciation <span className={styles.optional}>(optional)</span>
+                                                </label>
 
                                                 <div className={styles.audioModeSelector}>
                                                     <button
@@ -737,7 +741,9 @@ export default function ContributePage() {
                                             </div>
 
                                             <div className={styles.formGroup}>
-                                                <label htmlFor="exampleSentence" className={styles.label}>Example Sentence</label>
+                                                <label htmlFor="exampleSentence" className={styles.label}>
+                                                    Example Sentence <span className={styles.optional}>(optional)</span>
+                                                </label>
                                                 <textarea
                                                     id="exampleSentence"
                                                     name="exampleSentence"
@@ -750,7 +756,9 @@ export default function ContributePage() {
                                             </div>
 
                                             <div className={styles.formGroup}>
-                                                <label htmlFor="usageComment" className={styles.label}>Usage Comment</label>
+                                                <label htmlFor="usageComment" className={styles.label}>
+                                                    Usage Comment <span className={styles.optional}>(optional)</span>
+                                                </label>
                                                 <textarea
                                                     id="usageComment"
                                                     name="usageComment"

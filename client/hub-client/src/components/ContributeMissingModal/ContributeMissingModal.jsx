@@ -343,7 +343,7 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                     {fieldsToContribute.includes('partOfSpeech') && (
                       <div className={styles.formGroup}>
                           <label htmlFor="partOfSpeech" className={styles.label}>
-                              Part of Speech
+                              Part of Speech <span className={styles.optional}>(optional)</span>
                           </label>
                           <select
                               id="partOfSpeech"
@@ -365,7 +365,7 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                     {fieldsToContribute.includes('exampleSentence') && (
                       <div className={styles.formGroup}>
                         <label htmlFor="exampleSentence" className={styles.label}>
-                            Example Sentence 
+                            Example Sentence <span className={styles.optional}>(optional)</span>
                         </label>
                         <textarea
                             id="exampleSentence"
@@ -374,7 +374,6 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                             onChange={handleChange}
                             className={styles.textarea}
                             rows="3"
-                            required
                             placeholder="Optional: Show how this word is used in context"
                         />
                         {errors.exampleSentence && (
@@ -386,7 +385,7 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                     {fieldsToContribute.includes('usageComment') && (
                       <div className={styles.formGroup}>
                           <label htmlFor="usageComment" className={styles.label}>
-                              Usage Comment
+                              Usage Comment <span className={styles.optional}>(optional)</span>
                           </label>
                           <textarea
                               id="usageComment"
@@ -395,7 +394,6 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                               onChange={handleChange}
                               className={styles.textarea}
                               rows="3"
-                              required
                               placeholder="Optional: Give a short note on when/how to use this word"
                           />
                           {errors.usageComment && (
@@ -407,7 +405,7 @@ export default function ContributeMissingModal({ translation, fieldsToContribute
                     {fieldsToContribute.includes('audioUrl') && (
                       <div className={styles.formGroup}>
                           <label className={styles.label}>
-                              Audio Pronunciation
+                              Audio Pronunciation <span className={styles.optional}>(optional)</span>
                           </label>
                           
                           {/* Mode Selector */}
