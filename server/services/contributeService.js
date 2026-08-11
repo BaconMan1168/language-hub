@@ -16,19 +16,22 @@ const COMPLETABLE_FIELDS = [
     'usageComment'
 ];
 
-async function contributeTranslation(
+export async function contributeTranslation(
     userId,
     {
         languageId,
         wordText,
         englishDefinition,
         exampleSentence,
+        englishExampleSentence,
         audioUrl,
         partOfSpeech,
         usageComment
-    }
+    },
+    prismaClient = prisma,
+    findCommonWord = findCommonWordMatch
 ) {
-    const language = await prisma.language.findUnique({
+    const language = await prismaClient.language.findUnique({
         where: { id: languageId },
         select: { id: true }
     });
@@ -38,20 +41,23 @@ async function contributeTranslation(
     }
 
     // Try to match to top 3000 words
-    const commonWord = await findCommonWordMatch(englishDefinition);
+    const commonWord = await findCommonWord(englishDefinition);
 
     // Check before inserting whether this common word is already covered for this language
     const isFirstCoverage = commonWord
-        ? (await prisma.translation.count({ where: { languageId, commonWordId: commonWord.id } })) === 0
+        ? (await prismaClient.translation.count({ where: { languageId, commonWordId: commonWord.id } })) === 0
         : false;
 
-    const contributedTranslation = await prisma.translation.create({
+    const contributedTranslation = await prismaClient.translation.create({
         data: {
             authorId: userId,
             languageId,
             wordText,
             englishDefinition,
             exampleSentence: exampleSentence || null,
+            englishExampleSentence: exampleSentence && englishExampleSentence
+                ? englishExampleSentence
+                : null,
             audioUrl: audioUrl || null,
             partOfSpeech: partOfSpeech || null,
             commonWordId: commonWord ? commonWord.id : null,
@@ -63,7 +69,7 @@ async function contributeTranslation(
     });
 
     if (isFirstCoverage) {
-        await prisma.language.update({
+        await prismaClient.language.update({
             where: { id: languageId },
             data: { completionCount: { increment: 1 } }
         });

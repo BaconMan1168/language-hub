@@ -12,6 +12,9 @@ const validateContribution = [
     body('exampleSentence')
         .optional({ checkFalsy: true })
         .trim(),
+    body('englishExampleSentence')
+        .optional({ checkFalsy: true })
+        .trim(),
     body('audioUrl') 
         .optional({ checkFalsy: true })
         .trim(),

@@ -1,6 +1,69 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { completeMissingTranslationFields } from './contributeService.js';
+import {
+    completeMissingTranslationFields,
+    contributeTranslation
+} from './contributeService.js';
+
+test('contributeTranslation persists an English translation with its example sentence', async () => {
+    const createCalls = [];
+    const prismaClient = {
+        language: {
+            findUnique: async () => ({ id: 'language-1' })
+        },
+        translation: {
+            create: async (args) => {
+                createCalls.push(args);
+                return { id: 'translation-1', ...args.data, audioUrl: null };
+            }
+        }
+    };
+
+    const result = await contributeTranslation(
+        'author-1',
+        {
+            languageId: 'language-1',
+            wordText: 'Kumusta',
+            englishDefinition: 'Hello',
+            exampleSentence: 'Kumusta ka?',
+            englishExampleSentence: 'How are you?'
+        },
+        prismaClient,
+        async () => null
+    );
+
+    assert.equal(result.englishExampleSentence, 'How are you?');
+    assert.equal(createCalls[0].data.englishExampleSentence, 'How are you?');
+});
+
+test('contributeTranslation does not persist an English translation without an example sentence', async () => {
+    const createCalls = [];
+    const prismaClient = {
+        language: {
+            findUnique: async () => ({ id: 'language-1' })
+        },
+        translation: {
+            create: async (args) => {
+                createCalls.push(args);
+                return { id: 'translation-1', ...args.data, audioUrl: null };
+            }
+        }
+    };
+
+    await contributeTranslation(
+        'author-1',
+        {
+            languageId: 'language-1',
+            wordText: 'Kumusta',
+            englishDefinition: 'Hello',
+            englishExampleSentence: 'How are you?'
+        },
+        prismaClient,
+        async () => null
+    );
+
+    assert.equal(createCalls[0].data.englishExampleSentence, null);
+});
 
 test('completeMissingTranslationFields persists only fields that are still missing', async () => {
     const updateCalls = [];
